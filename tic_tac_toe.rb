@@ -1,9 +1,11 @@
 class Board
+  attr_reader :board
   def initialize(number_of_rows, number_of_columns)
     @number_of_rows = number_of_rows
     @number_of_columns = number_of_columns
 
-    create_board
+    @board = create_board
+    display_board
   end
 
   Square = Struct.new(:piece)
@@ -18,11 +20,16 @@ class Board
 
   def create_row_of_squares
     squares = []
-    @number_of_columns.times { squares << Square.new() }
+    @number_of_columns.times { squares << Square.new('--') }
     squares
   end
 
-  public
+  def display_board
+    board.each do |row|
+      row.each { |square| print "|#{square.piece}|" }
+      print "\n"
+    end
+  end
 
 end
 
