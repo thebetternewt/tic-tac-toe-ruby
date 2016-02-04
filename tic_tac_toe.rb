@@ -24,12 +24,24 @@ class Board
     squares
   end
 
+  public
+
   def display_board
     board.each do |row|
       row.each { |square| print "|#{square.piece}|" }
       print "\n"
     end
   end
+
+end
+
+class Player
+  attr_reader :name
+  def initialize(name)
+    @name = name
+  end
+
+  
 
 end
 
