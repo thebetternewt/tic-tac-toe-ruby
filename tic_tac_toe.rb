@@ -77,9 +77,9 @@ class Board
   end
 
   def update_board(move)
-    selected_square = board[move[1]][move[0]]
+    selected_square = board[move[:row]][move[:column]]
     if validate_player_move?(selected_square)
-      selected_square.piece = move[2]
+      selected_square.piece = move[:symbol]
     else
       puts "\nSorry, invalid move! There is already a piece in that square.\n"
       return false
@@ -120,9 +120,11 @@ class Player
       print "combination (e.g. A1) >> "
       location = gets.upcase.chomp
     end
-    column = location[0].ord - 65
-    row = (location[1].to_i - 3).abs # TODO: Change hardcoded calculation to reference row count.
-    [column, row, self.symbol]
+    move = {}
+    move[:column] = location[0].ord - 65
+    move[:row] = (location[1].to_i - 3).abs # TODO: Change hardcoded calculation to reference row count.
+    move[:symbol] = self.symbol
+    move
   end
 
 end
