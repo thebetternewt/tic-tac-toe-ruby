@@ -25,7 +25,7 @@ class Board
     squares
   end
 
-  def validate_player_move(selected_square)
+  def validate_player_move?(selected_square)
     selected_square.piece == blank_square_string ? true : false
   end
 
@@ -70,10 +70,10 @@ class Board
 
   def update_board(move)
     selected_square = board[move[1]][move[0]]
-    if validate_player_move(selected_square)
+    if validate_player_move?(selected_square)
       selected_square.piece = move[2]
     else
-      puts "Sorry, invalid move! There is already a piece in that square.\n"
+      puts "\nSorry, invalid move! There is already a piece in that square.\n"
       return false
     end
   end
@@ -98,12 +98,21 @@ class Player
     gets.chomp
   end
 
+  def validate_move_input?(input)
+    input =~ /[A-C][1-3]/ ? true : false
+  end
+
   public
 
   def take_turn
     print "\n#{name}, please enter your next move. >> "
-    location = gets.chomp
-    column = location[0].upcase.ord - 65
+    location = gets.upcase.chomp
+    while !validate_move_input?(location)
+      puts "\nSorry, that is an invalid move. Please choose a valid row-column"
+      print "combination (e.g. A1) >> "
+      location = gets.upcase.chomp
+    end
+    column = location[0].ord - 65
     row = (location[1].to_i - 3).abs # TODO: Change hardcoded calculation to reference row count.
     [column, row, self.symbol]
   end
