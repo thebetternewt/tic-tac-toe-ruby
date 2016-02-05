@@ -108,16 +108,22 @@ class Player
   end
 
   def choose_symbol
-    print "\nHi, #{name}! Please enter the symbol would you like to use. >> "
+    print "\nPlease enter the symbol would you like to use. >> "
     gets.chomp
   end
 
   def greet_player
-    puts "\n#{name}, you've chosen to use #{symbol}.\n"
+    puts "\nHi #{name}! Welcome to Tic-Tac-Toe with Ruby! You've chosen to use #{symbol} as your game piece.\n"
   end
 
   def validate_move_input?(input)
-    input =~ /[A-C][1-3]/ ? true : false
+    if input =~ /[A-C][1-3]/
+      true
+    else
+      puts "\nSorry, that is an invalid move. Please choose a valid row-column"
+      print "combination (e.g. A1) >> "
+      false
+    end
   end
 
   public
@@ -126,8 +132,6 @@ class Player
     print "\n#{name}, please enter your next move. >> "
     location = gets.upcase.chomp
     while !validate_move_input?(location)
-      puts "\nSorry, that is an invalid move. Please choose a valid row-column"
-      print "combination (e.g. A1) >> "
       location = gets.upcase.chomp
     end
     move = {}
