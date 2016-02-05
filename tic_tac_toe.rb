@@ -1,3 +1,11 @@
+class Array
+
+  def same_values?
+    self.uniq.size == 1
+  end
+
+end
+
 class Board
   attr_reader :side_length, :board, :blank_square_string
   def initialize(side_length = 3)
@@ -34,23 +42,23 @@ class Board
   def win?
     game_over = false
     board.each do |row| # Check rows for win.
-      if row.uniq.size == 1 && row.uniq[0].piece != blank_square_string
+      if row.same_values? && row.uniq[0].piece != blank_square_string
         game_over = true
       end
     end
 
     board.transpose.each do |column| # Check columns for win.
-      if column.uniq.size == 1 && column.uniq[0].piece != blank_square_string
+      if column.same_values? && column.uniq[0].piece != blank_square_string
         game_over = true
         p game_over
       end
     end
 
     # Check diagonals for win.
-    if board.flatten.values_at(0,4,8).uniq.size == 1 && board.flatten.values_at(0,4,8).uniq[0].piece != blank_square_string
+    if board.flatten.values_at(0,4,8).same_values? && board.flatten.values_at(0,4,8).uniq[0].piece != blank_square_string
       game_over = true
     end
-    if board.flatten.values_at(2,4,6).uniq.size == 1 && board.flatten.values_at(2,4,6).uniq[0] != blank_square_string
+    if board.flatten.values_at(2,4,6).same_values? && board.flatten.values_at(2,4,6).uniq[0] != blank_square_string
       game_over = true
     end
 
@@ -60,7 +68,7 @@ class Board
   def display_board
     print "\n"
     board.each_with_index do |row, index|
-      print "#{index + 1} "
+      print "#{(index - board.size).abs} "
       row.each { |square| print "#{square.piece} " }
       print "\n"
     end
