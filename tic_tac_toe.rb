@@ -1,8 +1,7 @@
 class Board
-  attr_reader :board, :blank_square_string
-  def initialize(number_of_rows, number_of_columns)
-    @number_of_rows = number_of_rows
-    @number_of_columns = number_of_columns
+  attr_reader :side_length, :board, :blank_square_string
+  def initialize(side_length = 3)
+    @side_length = side_length
     @blank_square_string = '-'
 
     @board = create_board
@@ -16,14 +15,18 @@ class Board
 
   def create_board
     board = []
-    @number_of_rows.times { board << create_row_of_squares }
+    side_length.times { board << create_row_of_squares }
     board
   end
 
   def create_row_of_squares
     squares = []
-    @number_of_columns.times { squares << Square.new(blank_square_string) }
+    side_length.times { squares << Square.new(blank_square_string) }
     squares
+  end
+
+  def validate_player_move(selected_square)
+    selected_square.piece == blank_square_string ? true : false
   end
 
   public
@@ -66,7 +69,13 @@ class Board
   end
 
   def update_board(move)
-    board[move[1]][move[0]].piece = move[2]
+    selected_square = board[move[1]][move[0]]
+    if validate_player_move(selected_square)
+      selected_square.piece = move[2]
+    else
+      puts "Sorry, invalid move! There is already a piece in that square.\n"
+      return false
+    end
   end
 
 end
@@ -101,7 +110,7 @@ class Player
 
 end
 
-my_board = Board.new(3,3)
+my_board = Board.new()
 
 print "\nPlayer 1, please type your name. >> "
 player1 = Player.new()
@@ -116,7 +125,9 @@ current_player ||= player1
 loop do
   my_board.display_board
   move = current_player.take_turn
-  my_board.update_board(move)
+  while !my_board.update_board(move)
+    move = current_player.take_turn
+  end
 
   break if my_board.win? == true
 
