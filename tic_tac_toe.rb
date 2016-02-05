@@ -26,6 +26,24 @@ class Board
 
   public
 
+  def win?
+    p 'win? called'
+    game_over = false
+    board.each do |row|
+      p row
+      if row.uniq.size == 1 then return true end
+    end
+    board.transpose.each do |column|
+      p column
+      if column.uniq.size == 1 then return true end
+    end
+
+    if board.flatten.values_at(0,3,6).uniq.size == 1 then game_over = true end
+    if board.flatten.values_at(2,5,8).uniq.size == 1 then game_over = true end
+
+    game_over
+  end
+
   def display_board
     board.each do |row|
       row.each { |square| print "|#{square.piece}|" }
@@ -33,10 +51,11 @@ class Board
     end
   end
 
-  def update_board(location)
-    board[location[1]][location[0]].piece = location[2]
+  def update_board(move)
+    board[move[1]][move[0]].piece = move[2]
     display_board
   end
+
 end
 
 class Player
@@ -80,6 +99,11 @@ player2 = Player.new()
 puts "Hi, #{player2.name}! You've chosen to use #{player2.symbol}."
 
 loop do
-  my_board.update_board(player1.take_turn)
-  my_board.update_board(player2.take_turn)
+  move = player1.take_turn
+  my_board.update_board(move)
+  move = player2.take_turn
+  my_board.update_board(move)
+  break if my_board.win? == true
 end
+
+puts "The game is over. Somebody won!"
