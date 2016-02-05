@@ -34,7 +34,12 @@ class Board
   end
 
   def validate_player_move?(selected_square)
-    selected_square.piece == blank_square_string ? true : false
+    if selected_square.piece == blank_square_string
+      return true
+    else
+      puts "\nSorry, invalid move! There is already a piece in that square.\n"
+      return false
+    end
   end
 
   public
@@ -81,8 +86,7 @@ class Board
     if validate_player_move?(selected_square)
       selected_square.piece = move[:symbol]
     else
-      puts "\nSorry, invalid move! There is already a piece in that square.\n"
-      return false
+      false
     end
   end
 
@@ -93,17 +97,23 @@ class Player
   def initialize
     @name = get_player_name
     @symbol = choose_symbol
+    greet_player
   end
 
   private
 
   def get_player_name
+    print "\nPlease type your name. >> "
     gets.chomp
   end
 
   def choose_symbol
     print "\nHi, #{name}! Please enter the symbol would you like to use. >> "
     gets.chomp
+  end
+
+  def greet_player
+    puts "\n#{name}, you've chosen to use #{symbol}.\n"
   end
 
   def validate_move_input?(input)
@@ -131,15 +141,16 @@ end
 
 my_board = Board.new()
 
-print "\nPlayer 1, please type your name. >> "
+puts
+puts "Welcome to Tic-Tac-Toe in Ruby!"
+puts
+puts "Player 1..."
 player1 = Player.new()
-puts "\n#{player1.name}, you've chosen to use #{player1.symbol}."
-
-print "\nPlayer 2, please type your name. >> "
+puts
+puts "Player 2..."
 player2 = Player.new()
-puts "\n#{player2.name}, you've chosen to use #{player2.symbol}."
 
-current_player ||= player1
+current_player = player1
 
 loop do
   my_board.display_board
